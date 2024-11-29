@@ -1,8 +1,5 @@
-# GestorVentas.py
-
 from OpenGL.GLUT import *
 from OpenGL.GL import *
-from OpenGL.GLU import *
 from Mapa import Mapa
 
 class GestorVentas:
