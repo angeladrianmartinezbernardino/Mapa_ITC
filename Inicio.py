@@ -83,7 +83,7 @@ class Inicio:
     def modo_vendedor(self):
         # Entrar en modo vendedor
         print("Modo Vendedor seleccionado")
-        from Gestor_Ventas import GestorVentas
+        from GestorVentas import GestorVentas
         gestor = GestorVentas('vendedor')
         glutDestroyWindow(glutGetWindow())  # Cerrar ventana del menú
         gestor.run()
@@ -91,7 +91,7 @@ class Inicio:
     def modo_cliente(self):
         # Entrar en modo cliente
         print("Modo Cliente seleccionado")
-        from Gestor_Ventas import GestorVentas
+        from GestorVentas import GestorVentas
         gestor = GestorVentas('cliente')
         glutDestroyWindow(glutGetWindow())  # Cerrar ventana del menú
         gestor.run()
