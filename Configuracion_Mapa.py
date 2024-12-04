@@ -61,6 +61,7 @@ Industriales_Quimicos = (600, 460)
 Industriales_Fisicos = (650, 460)
 Industriales_Biologos = (700, 460)
 Industriales_Ecologistas = (750, 460)
+Industriales_Arquitectos = (800, 460)
 
 # Residencial Tecnológico.
 Administradores_Contadores = (450, 375)
@@ -68,6 +69,7 @@ Administradores_Medicos = (500, 375)
 Administradores_Ingenieros = (550, 375)
 Administradores_Quimicos = (600, 375)
 Administradores_Fisicos = (650, 375)
+Administradores_Arquitectos = (750, 375)
 
 # Residencial Tecnológico.
 SeizoFuruya_Agronomos = (400, 290)
@@ -76,7 +78,7 @@ Agronomos_Medicos = (500, 290)
 Agronomos_Ingenieros = (550, 290)
 
 # Residencial Tecnológico.
-ManuelOrozcoyBerra_Arquitectos = (900, 550)
+ManuelOrozcoyBerra_Arquitectos = (850, 555)
 AntonioGarciaCubas_Arquitectos = (600, 50)
 
 I_A = (800, 460)
@@ -107,6 +109,7 @@ Calles = {
     "AntonioGarciaCubas2": {"origen": AntonioGarciaCubas_SeizoFuruya, "destino": AntonioGarciaCubas_Contadores, "nombre": "Antonio García Cubas"},
     "AntonioGarciaCubas3": {"origen": AntonioGarciaCubas_Contadores, "destino": AntonioGarciaCubas_Medicos, "nombre": "Antonio García Cubas"},
     "AntonioGarciaCubas4": {"origen": AntonioGarciaCubas_Medicos, "destino": AntonioGarciaCubas_Ingenieros, "nombre": "Antonio García Cubas"},
+    "AntonioGarciaCubas5": {"origen": AntonioGarciaCubas_Ingenieros, "destino": AntonioGarciaCubas_Arquitectos, "nombre": "Antonio García Cubas"},
 
     "IgnacioBorunda": {"origen": AntonioGarciaCubas_IgnacioBorunda, "destino": ManuelOrozcoyBerra_IgnacioBorunda, "nombre": "Ignacio Borunda"},
 
@@ -131,6 +134,7 @@ Calles = {
     "ManuelOrozcoyBerra7": {"origen": ManuelOrozcoyBerra_Quimicos, "destino": ManuelOrozcoyBerra_Fisicos, "nombre": "Manuel Orozco y Berra"},
     "ManuelOrozcoyBerra8": {"origen": ManuelOrozcoyBerra_Fisicos, "destino": ManuelOrozcoyBerra_Biologos, "nombre": "Manuel Orozco y Berra"},
     "ManuelOrozcoyBerra9": {"origen": ManuelOrozcoyBerra_Biologos, "destino": ManuelOrozcoyBerra_Ecologistas, "nombre": "Manuel Orozco y Berra"},
+    "ManuelOrozcoyBerra10": {"origen": ManuelOrozcoyBerra_Ecologistas, "destino": ManuelOrozcoyBerra_Arquitectos, "nombre": "Manuel Orozco y Berra"},
 
     "Contadores": {"origen": ManuelOrozcoyBerra_Contadores, "destino": Industriales_Contadores, "nombre": "Contadores"},
     "Contadores2": {"origen": Industriales_Contadores, "destino": Administradores_Contadores, "nombre": "Contadores"},
@@ -158,14 +162,20 @@ Calles = {
     "Industriales5": {"origen": Industriales_Quimicos, "destino": Industriales_Fisicos, "nombre": "Industriales"},
     "Industriales6": {"origen": Industriales_Fisicos, "destino": Industriales_Biologos, "nombre": "Industriales"},
     "Industriales7": {"origen": Industriales_Biologos, "destino": Industriales_Ecologistas, "nombre": "Industriales"},
+    "Industriales8": {"origen": Industriales_Ecologistas, "destino": Industriales_Arquitectos, "nombre": "Industriales"},
 
     "Administradores": {"origen": SeizoFuruya_AdministradoresPoniente, "destino": Administradores_Contadores, "nombre": "Administradores"},
     "Administradores2": {"origen": Administradores_Contadores, "destino": Administradores_Medicos, "nombre": "Administradores"},
     "Administradores3": {"origen": Administradores_Medicos, "destino": Administradores_Ingenieros, "nombre": "Administradores"},
     "Administradores4": {"origen": Administradores_Ingenieros, "destino": Administradores_Quimicos, "nombre": "Administradores"},
     "Administradores5": {"origen": Administradores_Quimicos, "destino": Administradores_Fisicos, "nombre": "Administradores"},
+    "Administradores6": {"origen": Administradores_Fisicos, "destino": Administradores_Arquitectos, "nombre": "Administradores"},
 
     "Agronomos": {"origen": SeizoFuruya_Agronomos, "destino": Agronomos_Contadores, "nombre": "Agrónomos"},
     "Agronomos2": {"origen": Agronomos_Contadores, "destino": Agronomos_Medicos, "nombre": "Agrónomos"},
-    "Agronomos3": {"origen": Agronomos_Medicos, "destino": Agronomos_Ingenieros, "nombre": "Agrónomos"}
+    "Agronomos3": {"origen": Agronomos_Medicos, "destino": Agronomos_Ingenieros, "nombre": "Agrónomos"},
+
+    "Arquitectos": {"origen": ManuelOrozcoyBerra_Arquitectos, "destino": Industriales_Arquitectos, "nombre": "Arquitectos"},
+    "Arquitectos2": {"origen": Industriales_Arquitectos, "destino": Administradores_Arquitectos, "nombre": "Arquitectos"},
+    "Arquitectos3": {"origen": Administradores_Arquitectos, "destino": AntonioGarciaCubas_Arquitectos, "nombre": "Arquitectos"}
 }
