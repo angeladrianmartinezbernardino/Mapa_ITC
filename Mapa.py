@@ -78,9 +78,18 @@ class Mapa:
         glFlush()  # Asegura que se renderice el contenido.
 
     def encontrar_camino_mas_corto(self, origen_coord, destino_coord):
-        """Encuentra el camino más corto entre dos coordenadas."""
+        """
+        Encuentra el camino más corto entre dos coordenadas.
+        - `origen_coord`: Coordenadas del punto de origen (x, y).
+        - `destino_coord`: Coordenadas del punto de destino (x, y).
+        """
+        # Convierte las coordenadas a tuplas, ya que las listas no son hashables.
+        origen_coord = tuple(origen_coord)
+        destino_coord = tuple(destino_coord)
+
         origen_id = self.nodos.get(origen_coord)
         destino_id = self.nodos.get(destino_coord)
+
         if origen_id is None or destino_id is None:
             print("Origen o destino no existen en el mapa.")
             return []
@@ -123,3 +132,35 @@ class Mapa:
                 glFlush()
                 return
         print("Calle no encontrada para resaltar.")
+
+    def resaltar_calle(self, origen, destino, color=(1, 0, 0)):
+        """
+        Dibuja una línea entre dos nodos para resaltar una calle.
+        - `origen`: Coordenadas del nodo origen.
+        - `destino`: Coordenadas del nodo destino.
+        - `color`: Color de la línea (por defecto, rojo).
+        """
+        glColor3f(*color)  # Establece el color (por defecto, rojo).
+        glLineWidth(4.0)  # Aumenta el grosor de la línea.
+        glBegin(GL_LINES)
+        glVertex2f(*origen)
+        glVertex2f(*destino)
+        glEnd()
+        glFlush()
+
+    def encontrar_nodo_mas_cercano(self, coordenadas):
+        """
+        Encuentra el nodo más cercano a las coordenadas dadas.
+        - `coordenadas`: Coordenadas del punto (x, y).
+        - Devuelve las coordenadas del nodo más cercano.
+        """
+        nodo_mas_cercano = None
+        menor_distancia = float('inf')
+
+        for nodo in self.nodos:
+            distancia = math.hypot(coordenadas[0] - nodo[0], coordenadas[1] - nodo[1])
+            if distancia < menor_distancia:
+                menor_distancia = distancia
+                nodo_mas_cercano = nodo
+
+        return nodo_mas_cercano

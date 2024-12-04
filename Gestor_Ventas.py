@@ -1,4 +1,5 @@
 import json
+import math
 from OpenGL.GLUT import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -60,46 +61,123 @@ class GestorVentas:
 
     def seleccionar_punto(self, x, y):
         """
-        Selecciona un punto según su tipo.
-        - Los negocios se asignan como origen.
-        - Las casas se asignan como destino.
+        Selecciona un punto según su tipo:
+        - Negocios como origen.
+        - Casas como destino.
         """
+        if self.entrega_activa:  # Bloquear interacciones si la entrega está activa.
+            print("Entrega en curso. No se pueden seleccionar más puntos.")
+            return
+
         punto_cercano = self.obtener_punto_cercano(x, y)
         if punto_cercano:
-            if self.modo == 'vendedor' and punto_cercano['tipo'] == 'negocio':
-                if not self.entrega_activa:
-                    self.origen = punto_cercano
-                    print(f"Origen seleccionado: {self.origen}")
-            elif self.modo == 'cliente' and punto_cercano['tipo'] == 'casa':
-                if self.origen:
-                    self.destino = punto_cercano
-                    print(f"Destino seleccionado: {self.destino}")
-                    self.simular_entrega()
+            if self.origen is None and punto_cercano['tipo'] == 'negocio':
+                self.origen = punto_cercano
+                print(f"Origen seleccionado: {self.origen}")
+            elif self.destino is None and punto_cercano['tipo'] == 'casa':
+                self.destino = punto_cercano
+                print(f"Destino seleccionado: {self.destino}")
+                self.simular_entrega()
 
     def simular_entrega(self):
         """
         Simula la entrega del negocio a la casa.
         - Encuentra el camino más corto.
-        - Simula la visualización del recorrido.
+        - Simula la visualización del recorrido progresivo.
         """
         if not self.origen or not self.destino:
             print("Se requiere un origen y un destino para iniciar la entrega.")
             return
 
-        self.entrega_activa = True
-        camino = self.mapa.encontrar_camino_mas_corto(self.origen['coords'], self.destino['coords'])
+        # Encuentra los nodos más cercanos en el grafo para el origen y destino.
+        nodo_origen = self.mapa.encontrar_nodo_mas_cercano(self.origen['coords'])
+        nodo_destino = self.mapa.encontrar_nodo_mas_cercano(self.destino['coords'])
+
+        if nodo_origen is None or nodo_destino is None:
+            print("No se encontraron nodos cercanos al origen o destino.")
+            self.resetear_entrega()
+            return
+
+        print(f"Nodo de origen: {nodo_origen}, Nodo de destino: {nodo_destino}")
+
+        # Encuentra el camino más corto.
+        camino = self.mapa.encontrar_camino_mas_corto(nodo_origen, nodo_destino)
 
         if not camino:
             print("No se encontró un camino válido.")
-        else:
-            print(f"Camino encontrado: {camino}")
-            for i in range(len(camino) - 1):
-                self.mapa.resaltar_calle(camino[i], camino[i + 1])
+            self.resetear_entrega()
+            return
 
+        print(f"Camino encontrado: {camino}")
+        self.animar_recorrido(camino)
+
+    def animar_recorrido(self, camino, indice=0, progreso=0):
+        """
+        Anima el recorrido desde el origen al destino, llenando el camino progresivamente.
+        - `camino`: Lista de nodos (coordenadas) que forman la ruta.
+        - `indice`: Índice del nodo actual que se está procesando.
+        - `progreso`: Progreso dentro del segmento actual en píxeles.
+        """
+        if indice < len(camino) - 1:
+            origen = camino[indice]
+            destino = camino[indice + 1]
+
+            # Calcula la distancia total entre los nodos.
+            distancia_total = math.hypot(destino[0] - origen[0], destino[1] - origen[1])
+
+            # Calcula el progreso actual como una fracción del segmento.
+            fraccion = progreso / distancia_total if distancia_total > 0 else 1.0
+            x_actual = origen[0] + fraccion * (destino[0] - origen[0])
+            y_actual = origen[1] + fraccion * (destino[1] - origen[1])
+
+            # Dibuja la línea hasta el progreso actual.
+            glColor3f(1, 0, 0)  # Rojo para la animación.
+            glLineWidth(4.0)  # Línea gruesa para destacar.
+            glBegin(GL_LINES)
+            glVertex2f(origen[0], origen[1])
+            glVertex2f(x_actual, y_actual)
+            glEnd()
+            glFlush()
+
+            # Si no se ha completado el segmento, avanza en 1 píxel.
+            if progreso < distancia_total:
+                glutTimerFunc(100, lambda value: self.animar_recorrido(camino, indice, progreso + 1), 0)
+            else:
+                # Avanza al siguiente segmento.
+                glutTimerFunc(100, lambda value: self.animar_recorrido(camino, indice + 1, 0), 0)
+        else:
+            print("Simulación de entrega completada.")
+            self.resetear_entrega()
+
+    def resetear_entrega(self):
+        """
+        Reinicia el estado de la entrega para permitir nuevas interacciones.
+        """
+        self.entrega_activa = False
         self.origen = None
         self.destino = None
-        self.entrega_activa = False
         glutPostRedisplay()
+
+    def mouse_click(self, button, state, x, y):
+        """
+        Manejador de clics del ratón.
+        - Bloquea interacciones si hay una entrega activa.
+        """
+        if self.entrega_activa:  # Bloquear interacciones si la entrega está activa.
+            print("Entrega en curso. No se permiten interacciones.")
+            return
+
+        if state == GLUT_DOWN:
+            y = self.height - y  # Ajustar coordenada Y.
+            if button == GLUT_LEFT_BUTTON:
+                punto_cercano = self.obtener_punto_cercano(x, y)
+                if punto_cercano:
+                    self.seleccionar_punto(x, y)
+                else:
+                    nuevo_tipo = 'negocio' if self.modo == 'vendedor' else 'casa'
+                    self.agregar_punto(x, y, nuevo_tipo)
+            elif button == GLUT_RIGHT_BUTTON:
+                self.crear_menus()  # Actualiza el menú dinámicamente.
 
     def obtener_punto_cercano(self, x, y):
         """Devuelve el punto más cercano a las coordenadas dadas."""
@@ -122,25 +200,38 @@ class GestorVentas:
 
     def mouse_click(self, button, state, x, y):
         """Manejador de clics del ratón."""
+        if self.entrega_activa:  # Bloquear interacciones si la entrega está activa.
+            print("Entrega en curso. No se permiten interacciones.")
+            return
+
         if state == GLUT_DOWN:
             y = self.height - y  # Ajustar coordenada Y.
-            if button == GLUT_LEFT_BUTTON:
-                punto_cercano = self.obtener_punto_cercano(x, y)
+            punto_cercano = self.obtener_punto_cercano(x, y)
+
+            if button == GLUT_LEFT_BUTTON:  # Clic izquierdo.
                 if punto_cercano:
                     self.seleccionar_punto(x, y)
                 else:
                     nuevo_tipo = 'negocio' if self.modo == 'vendedor' else 'casa'
                     self.agregar_punto(x, y, nuevo_tipo)
-            elif button == GLUT_RIGHT_BUTTON:
-                self.crear_menus()  # Actualiza el menú dinámicamente.
+
+            elif button == GLUT_RIGHT_BUTTON:  # Clic derecho.
+                if punto_cercano:  # Solo activa el menú si hay un punto cercano.
+                    self.crear_menus()  # Actualiza el menú dinámicamente.
+                else:
+                    print("No hay puntos cercanos para interactuar.")
 
     def crear_menus(self):
-        """Crea el menú contextual según el estado actual."""
+        """Crea el menú contextual dinámicamente según el estado actual."""
+        # Elimina el menú previo para evitar conflictos.
+        glutDetachMenu(GLUT_RIGHT_BUTTON)
         menu = glutCreateMenu(self.accion_menu)
 
-        # Opciones del menú basadas en el contexto.
+        # Si no hay origen definido, solo permite seleccionar origen.
         if self.origen is None:
             glutAddMenuEntry("Seleccionar Punto de Origen", 1)
+
+        # Si ya hay origen y no hay destino definido, permite seleccionar destino.
         elif self.destino is None:
             glutAddMenuEntry("Seleccionar Punto de Destino", 2)
 
@@ -148,13 +239,12 @@ class GestorVentas:
 
     def accion_menu(self, opcion):
         """Acción según el menú seleccionado."""
-        if opcion == 1:
+        if opcion == 1 and self.origen is None:
             print("Haz clic en un negocio para seleccionar como punto de origen.")
-            # Aquí puedes agregar más lógica si es necesario.
-        elif opcion == 2:
+        elif opcion == 2 and self.destino is None:
             print("Haz clic en una casa para seleccionar como punto de destino.")
-            # Aquí puedes agregar más lógica si es necesario.
-
+        else:
+            print("Acción inválida o ya completada.")
         return 0  # Devuelve un valor entero explícito para GLUT.
 
     def run(self):
