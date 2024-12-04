@@ -16,17 +16,17 @@ class GestorVentas:
         self.cargar_registro()
 
     def cargar_registro(self):
-        """Carga el registro de acciones previas desde un archivo."""
+        """Carga los puntos desde un archivo JSON estándar."""
         try:
             with open(self.registro_archivo, 'r') as archivo:
-                self.puntos = json.load(archivo)
-        except FileNotFoundError:
+                self.puntos = json.load(archivo)  # Carga el arreglo completo.
+        except (FileNotFoundError, json.JSONDecodeError):
             self.puntos = []
 
-    def guardar_registro(self):
-        """Guarda el registro actual de puntos en un archivo."""
+    def guardar_registro_completo(self):
+        """Guarda todos los puntos en el archivo como un arreglo JSON estándar."""
         with open(self.registro_archivo, 'w') as archivo:
-            json.dump(self.puntos, archivo)
+            json.dump(self.puntos, archivo, indent=4)  # Guarda como un arreglo con formato legible.
 
     def inicializar_opengl(self):
         """Configuración inicial de OpenGL."""
@@ -60,8 +60,9 @@ class GestorVentas:
 
     def agregar_punto(self, x, y, tipo):
         """Agrega un nuevo punto en el mapa."""
-        self.puntos.append({'coords': (x, y), 'tipo': tipo})
-        self.guardar_registro()
+        nuevo_punto = {'coords': [x, y], 'tipo': tipo}
+        self.puntos.append(nuevo_punto)
+        self.guardar_registro_completo()  # Guarda el arreglo completo cada vez que se agrega un punto.
         glutPostRedisplay()
 
     def eliminar_punto(self, x, y):
@@ -70,7 +71,7 @@ class GestorVentas:
             px, py = punto['coords']
             if abs(px - x) < 10 and abs(py - y) < 10:
                 self.puntos.remove(punto)
-                self.guardar_registro()
+                self.guardar_registro_completo()  # Guarda el arreglo completo después de eliminar.
                 glutPostRedisplay()
                 return
 
@@ -91,7 +92,7 @@ class GestorVentas:
     def cerrar_ventana(self):
         """Valida y cierra la ventana."""
         print("Guardando datos antes de salir...")
-        self.guardar_registro()
+        self.guardar_registro_completo()
         glutLeaveMainLoop()
 
     def run(self):
