@@ -4,7 +4,7 @@ from OpenGL.GLU import *
 
 class Inicio:
     def __init__(self):
-        # Dimensiones de la ventana
+        # Dimensiones de la ventana.
         self.width = 800
         self.height = 600
         # Definir los botones del menú.
