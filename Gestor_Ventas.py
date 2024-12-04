@@ -82,43 +82,41 @@ class GestorVentas:
     def simular_entrega(self):
         """
         Simula la entrega del negocio a la casa.
-        - Encuentra el camino más corto.
-        - Simula la visualización del recorrido progresivo.
         """
         if not self.origen or not self.destino:
             print("Se requiere un origen y un destino para iniciar la entrega.")
             return
 
-        # Encuentra los nodos más cercanos en el grafo para el origen y destino.
-        nodo_origen = self.mapa.encontrar_nodo_mas_cercano(self.origen['coords'])
-        nodo_destino = self.mapa.encontrar_nodo_mas_cercano(self.destino['coords'])
+        # Ajustar el origen y destino al punto dentro de la calle más cercana.
+        origen_ajustado, segmento_origen = self.mapa.encontrar_punto_en_calle(self.origen['coords'])
+        destino_ajustado, segmento_destino = self.mapa.encontrar_punto_en_calle(self.destino['coords'])
 
-        if nodo_origen is None or nodo_destino is None:
-            print("No se encontraron nodos cercanos al origen o destino.")
-            self.resetear_entrega()
-            return
+        print(f"Origen ajustado: {origen_ajustado}, Segmento: {segmento_origen}")
+        print(f"Destino ajustado: {destino_ajustado}, Segmento: {segmento_destino}")
 
-        print(f"Nodo de origen: {nodo_origen}, Nodo de destino: {nodo_destino}")
+        # Encuentra el nodo más cercano dentro del grafo para empezar y terminar la simulación.
+        nodo_origen = self.mapa.encontrar_nodo_mas_cercano(origen_ajustado)
+        nodo_destino = self.mapa.encontrar_nodo_mas_cercano(destino_ajustado)
 
         # Encuentra el camino más corto.
         camino = self.mapa.encontrar_camino_mas_corto(nodo_origen, nodo_destino)
+
+        # Agregar los puntos ajustados al inicio y fin del camino.
+        camino.insert(0, origen_ajustado)
+        camino.append(destino_ajustado)
 
         if not camino:
             print("No se encontró un camino válido.")
             self.resetear_entrega()
             return
 
-        # Guarda el camino en un atributo para usarlo posteriormente.
         self.camino = camino
         print(f"Camino encontrado: {camino}")
         self.animar_recorrido(camino)
 
     def animar_recorrido(self, camino, indice=0, progreso=0):
         """
-        Anima el recorrido desde el origen al destino, llenando el camino progresivamente.
-        - `camino`: Lista de nodos (coordenadas) que forman la ruta.
-        - `indice`: Índice del nodo actual que se está procesando.
-        - `progreso`: Progreso dentro del segmento actual en píxeles.
+        Anima el recorrido desde el origen al destino, considerando puntos proyectados.
         """
         if indice < len(camino) - 1:
             origen = camino[indice]
@@ -127,25 +125,22 @@ class GestorVentas:
             # Calcula la distancia total entre los nodos.
             distancia_total = math.hypot(destino[0] - origen[0], destino[1] - origen[1])
 
-            # Calcula el progreso actual como una fracción del segmento.
             fraccion = progreso / distancia_total if distancia_total > 0 else 1.0
             x_actual = origen[0] + fraccion * (destino[0] - origen[0])
             y_actual = origen[1] + fraccion * (destino[1] - origen[1])
 
-            # Dibuja la línea hasta el progreso actual.
-            glColor3f(1, 0, 0)  # Rojo para la animación.
-            glLineWidth(4.0)  # Línea gruesa para destacar.
+            # Dibuja el progreso.
+            glColor3f(1, 0, 0)  # Rojo.
+            glLineWidth(4.0)
             glBegin(GL_LINES)
             glVertex2f(origen[0], origen[1])
             glVertex2f(x_actual, y_actual)
             glEnd()
             glFlush()
 
-            # Si no se ha completado el segmento, avanza en 1 píxel.
             if progreso < distancia_total:
                 glutTimerFunc(100, lambda value: self.animar_recorrido(camino, indice, progreso + 1), 0)
             else:
-                # Avanza al siguiente segmento.
                 glutTimerFunc(100, lambda value: self.animar_recorrido(camino, indice + 1, 0), 0)
         else:
             print("Simulación de entrega completada.")

@@ -164,3 +164,36 @@ class Mapa:
                 nodo_mas_cercano = nodo
 
         return nodo_mas_cercano
+
+    def encontrar_punto_en_calle(self, coordenadas):
+        """
+        Encuentra el punto más cercano a las coordenadas dentro de las calles (segmentos de línea).
+        - `coordenadas`: Coordenadas del punto arbitrario (x, y).
+        - Retorna: (punto_proyectado, segmento_calle).
+        """
+        punto_mas_cercano = None
+        menor_distancia = float('inf')
+        segmento_cercano = None
+
+        for nombre_calle, datos_calle in Calles.items():  # Itera por las calles en el diccionario.
+            origen = datos_calle["origen"]
+            destino = datos_calle["destino"]
+
+            # Proyectar el punto en la línea (segmento).
+            dx, dy = destino[0] - origen[0], destino[1] - origen[1]
+            if dx == 0 and dy == 0:  # Evitar división por cero.
+                continue
+
+            t = max(0, min(1, ((coordenadas[0] - origen[0]) * dx + (coordenadas[1] - origen[1]) * dy) / (
+                        dx * dx + dy * dy)))
+            punto_proyectado = (origen[0] + t * dx, origen[1] + t * dy)
+
+            # Calcular la distancia al punto proyectado.
+            distancia = math.hypot(punto_proyectado[0] - coordenadas[0], punto_proyectado[1] - coordenadas[1])
+
+            if distancia < menor_distancia:
+                menor_distancia = distancia
+                punto_mas_cercano = punto_proyectado
+                segmento_cercano = (origen, destino)
+
+        return punto_mas_cercano, segmento_cercano
