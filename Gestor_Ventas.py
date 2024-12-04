@@ -4,15 +4,15 @@ from Mapa import Mapa
 
 class GestorVentas:
     def __init__(self, modo):
-        self.modo = modo  # 'vendedor' o 'cliente'
+        self.modo = modo  # 'vendedor' o 'cliente'.
         self.width = 1200
         self.height = 600
         self.mapa = Mapa(self.width, self.height)
-        self.puntos = []  # Lista de puntos (casas y negocios)
+        self.puntos = []  # Lista de puntos (casas y negocios).
         self.punto_seleccionado = None
         self.ultima_posicion_click = None
-        self.seleccionando_destino = False  # Inicializar como False
-        self.destino = None  # Inicializar como None
+        self.seleccionando_destino = False  # Inicializar como False.
+        self.destino = None  # Inicializar como None.
 
     def run(self):
         glutInit()
@@ -35,7 +35,7 @@ class GestorVentas:
     def display(self):
         glClear(GL_COLOR_BUFFER_BIT)
         self.mapa.display()
-        # Dibujar puntos adicionales (casas y negocios)
+        # Dibujar puntos adicionales (casas y negocios).
         self.dibujar_puntos()
         glFlush()
 
@@ -43,9 +43,9 @@ class GestorVentas:
         for punto in self.puntos:
             x, y = punto['coords']
             if punto['tipo'] == 'casa':
-                glColor3f(0, 0, 1)  # Azul para casas
+                glColor3f(0, 0, 1)  # Azul para casas.
             elif punto['tipo'] == 'negocio':
-                glColor3f(0, 1, 0)  # Verde para negocios
+                glColor3f(0, 1, 0)  # Verde para negocios.
             glPointSize(10)
             glBegin(GL_POINTS)
             glVertex2f(x, y)
@@ -71,7 +71,7 @@ class GestorVentas:
                 return
 
             if button == GLUT_RIGHT_BUTTON:
-                # Seleccionar punto (para eliminar)
+                # Seleccionar punto (para eliminar).
                 self.seleccionar_punto(x, y)
             elif button == GLUT_LEFT_BUTTON:
                 # Seleccionar negocio
@@ -102,7 +102,7 @@ class GestorVentas:
             glutAddMenuEntry("Agregar Negocio", 1)
             glutAddMenuEntry("Agregar Casa", 2)
             glutAddMenuEntry("Eliminar Punto", 3)
-            glutAddMenuEntry("Iniciar Viaje", 5)  # Nueva opción
+            glutAddMenuEntry("Iniciar Viaje", 5)  # Nueva opción.
             glutAttachMenu(GLUT_LEFT_BUTTON)
         elif self.modo == 'cliente':
             submenu = glutCreateMenu(self.accion_menu)
@@ -111,22 +111,22 @@ class GestorVentas:
 
     def accion_menu(self, opcion):
         if opcion == 1:
-            # Agregar negocio en la última posición clickeada
+            # Agregar negocio en la última posición clickeada.
             if self.ultima_posicion_click:
                 x, y = self.ultima_posicion_click
                 self.puntos.append({'coords': (x, y), 'tipo': 'negocio'})
                 glutPostRedisplay()
         elif opcion == 2:
-            # Agregar casa en la última posición clickeada
+            # Agregar casa en la última posición clickeada.
             if self.ultima_posicion_click:
                 x, y = self.ultima_posicion_click
                 self.puntos.append({'coords': (x, y), 'tipo': 'casa'})
                 glutPostRedisplay()
         elif opcion == 3:
-            # Eliminar punto seleccionado
+            # Eliminar punto seleccionado.
             self.eliminar_punto()
         elif opcion == 4:
-            # El cliente establece su ubicación de casa
+            # El cliente establece su ubicación de casa.
             if self.ultima_posicion_click:
                 x, y = self.ultima_posicion_click
                 self.puntos.append({'coords': (x, y), 'tipo': 'casa'})
@@ -146,7 +146,7 @@ class GestorVentas:
             print("Solo los vendedores pueden iniciar un viaje.")
             return
 
-        # Verificar si hay un negocio seleccionado
+        # Verificar si hay un negocio seleccionado.
         negocio = None
         for punto in self.puntos:
             if punto['tipo'] == 'negocio' and 'seleccionado' in punto and punto['seleccionado']:
@@ -161,7 +161,7 @@ class GestorVentas:
         self.seleccionando_destino = True
 
     def calcular_y_mostrar_ruta(self):
-        # Obtener coordenadas del negocio y la casa seleccionados
+        # Obtener coordenadas del negocio y la casa seleccionados.
         origen = None
         destino = None
 
@@ -182,10 +182,10 @@ class GestorVentas:
             print("No se pudo determinar el origen y destino para el viaje.")
 
     def animar_viaje(self):
-        # Dibujar la ruta como una línea amarilla
+        # Dibujar la ruta como una línea amarilla.
         def draw_route():
             self.display()
-            glColor3f(1, 1, 0)  # Color amarillo
+            glColor3f(1, 1, 0)  # Color amarillo.
             glLineWidth(4.0)
             glBegin(GL_LINE_STRIP)
             for x, y in self.ruta:
@@ -196,7 +196,7 @@ class GestorVentas:
         glutDisplayFunc(draw_route)
         glutPostRedisplay()
 
-    # En GestorVentas.py, dentro de la clase GestorVentas
+    # En GestorVentas.py, dentro de la clase GestorVentas.
 
     def run(self):
         glutInit()
@@ -211,10 +211,10 @@ class GestorVentas:
         self.crear_menus()
         glutDisplayFunc(self.display)
         glutMouseFunc(self.mouse_click)
-        glutWMCloseFunc(self.cerrar_ventana)  # Capturamos el cierre de la ventana
+        glutWMCloseFunc(self.cerrar_ventana)  # Capturamos el cierre de la ventana.
         glutMainLoop()
 
     def cerrar_ventana(self):
-        glutLeaveMainLoop()  # Salimos del bucle de GLUT
-        # Volvemos al menú de inicio
+        glutLeaveMainLoop()  # Salimos del bucle de GLUT.
+        # Volvemos al menú de inicio.
         Inicio()

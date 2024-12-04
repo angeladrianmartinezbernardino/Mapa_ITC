@@ -1,7 +1,8 @@
-# Intersecciones definidas como constantes.
+# Nuevo Tecnológico.
 ManuelOrozcoyBerra_IgnacioBorunda = (50, 500)
 ManuelOrozcoyBerra_Topografos_Psicologos = (275, 500)
 
+# Nuevo Tecnológico.
 Topografos_Enfermeras = (275, 475)
 Topografos_Antropologos = (275, 450)
 Topografos_Disenadores = (275, 425)
@@ -11,8 +12,10 @@ Topografos_Sociologos = (325, 350)
 Topografos_Geografos = (350, 325)
 Topografos_Profesores = (350, 300)
 
+# Nuevo Tecnológico.
 ManuelOrozcoyBerra_SeizoFuruya = (400, 525)
 
+# Nuevo Tecnológico.
 SeizoFuruya_Psicologos = (400, 500)
 SeizoFuruya_Enfermeras = (400, 475)
 SeizoFuruya_Antropologos = (400, 450)
@@ -23,10 +26,12 @@ SeizoFuruya_Sociologos = (400, 350)
 SeizoFuruya_Geografos = (400, 325)
 SeizoFuruya_Profesores = (400, 300)
 
+# Nuevo Tecnológico.
 AntonioGarciaCubas_SeizoFuruya = (400, 50)
-
-AntonioGarciaCubas_PresaAlvaroObregon = (950, 50)
 AntonioGarciaCubas_IgnacioBorunda = (50, 50)
+
+# Resicencial Tecnológico.
+AntonioGarciaCubas_PresaAlvaroObregon = (950, 50)
 ManuelOrozcoyBerra_PresaAlvaroObregon = (1150, 550)
 
 # Residencial Tecnológico.
@@ -38,6 +43,7 @@ ManuelOrozcoyBerra_Ingenieros = (550, 535)
 AntonioGarciaCubas_Ingenieros = (550, 50)
 ManuelOrozcoyBerra_Quimicos = (600, 540)
 
+# Residencial Tecnológico.
 X_Quimicos = (600, 50)
 ManuelOrozcoyBerra_Fisicos = (650, 545)
 X_Fisicos = (650, 50)
@@ -46,6 +52,7 @@ X_Biologos = (700, 50)
 ManuelOrozcoyBerra_Ecologistas = (750, 555)
 X_Ecologistas = (750, 50)
 
+# Residencial Tecnológico.
 SeizoFuruya_Industriales = (400, 460)
 Industriales_Contadores = (450, 460)
 Industriales_Medicos = (500, 460)
@@ -55,17 +62,20 @@ Industriales_Fisicos = (650, 460)
 Industriales_Biologos = (700, 460)
 Industriales_Ecologistas = (750, 460)
 
+# Residencial Tecnológico.
 Administradores_Contadores = (450, 375)
 Administradores_Medicos = (500, 375)
 Administradores_Ingenieros = (550, 375)
 Administradores_Quimicos = (600, 375)
 Administradores_Fisicos = (650, 375)
 
+# Residencial Tecnológico.
 SeizoFuruya_Agronomos = (400, 290)
 Agronomos_Contadores = (450, 290)
 Agronomos_Medicos = (500, 290)
 Agronomos_Ingenieros = (550, 290)
 
+# Residencial Tecnológico.
 ManuelOrozcoyBerra_Arquitectos = (900, 550)
 AntonioGarciaCubas_Arquitectos = (600, 50)
 
