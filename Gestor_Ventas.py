@@ -108,6 +108,8 @@ class GestorVentas:
             self.resetear_entrega()
             return
 
+        # Guarda el camino en un atributo para usarlo posteriormente.
+        self.camino = camino
         print(f"Camino encontrado: {camino}")
         self.animar_recorrido(camino)
 
@@ -151,11 +153,27 @@ class GestorVentas:
 
     def resetear_entrega(self):
         """
-        Reinicia el estado de la entrega para permitir nuevas interacciones.
+        Reinicia el estado de la entrega y muestra los resultados.
         """
+        # Calcular la distancia total del camino.
+        if hasattr(self, 'camino') and self.camino:
+            distancia_total = 0
+            for i in range(len(self.camino) - 1):
+                nodo_origen = self.camino[i]
+                nodo_destino = self.camino[i + 1]
+                distancia_total += math.hypot(
+                    nodo_destino[0] - nodo_origen[0],
+                    nodo_destino[1] - nodo_origen[1]
+                )
+
+            # Mostrar la ventana de resultados.
+            self.mostrar_resultado(distancia_total)
+
+        # Reiniciar el estado.
         self.entrega_activa = False
         self.origen = None
         self.destino = None
+        self.camino = []  # Limpia el atributo camino.
         glutPostRedisplay()
 
     def mouse_click(self, button, state, x, y):
@@ -259,6 +277,55 @@ class GestorVentas:
         glutDisplayFunc(self.display)
         glutMouseFunc(self.mouse_click)
         glutMainLoop()
+
+    def mostrar_resultado(self, distancia_total):
+        """
+        Muestra una ventana con el resultado del recorrido.
+        - `distancia_total`: Distancia total recorrida en píxeles.
+        """
+        tiempo_total = distancia_total * 0.1  # Tiempo en segundos.
+        tarifa = distancia_total * 5  # Tarifa en pesos mexicanos.
+
+        def inicializar_ventana():
+            # Inicializa la ventana de OpenGL.
+            glutInit()
+            glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
+            glutInitWindowSize(400, 300)
+            glutInitWindowPosition(100, 100)
+            glutCreateWindow(b"Resultado de la Entrega")
+            glClearColor(1.0, 1.0, 1.0, 1.0)  # Fondo blanco.
+            gluOrtho2D(0, 400, 0, 300)  # Coordenadas 2D.
+            glutDisplayFunc(renderizar_resultado)
+            glutMainLoop()
+
+        def renderizar_resultado():
+            # Renderiza el texto con los resultados.
+            glClear(GL_COLOR_BUFFER_BIT)
+            glColor3f(0, 0, 0)  # Texto negro.
+
+            def dibujar_texto(texto, x, y):
+                glRasterPos2f(x, y)
+                for ch in texto:
+                    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, ord(ch))
+
+            # Texto a mostrar.
+            mensajes = [
+                f"Distancia total recorrida: {distancia_total:.2f} pixeles",
+                f"Tiempo total recorrido: {tiempo_total:.2f} segundos",
+                f"Tarifa de entrega: ${tarifa:.2f} pesos",
+                "Nota: Cada 1 pixel = 0.1 segundos y 5 pesos.",
+                "Presiona la X para cerrar esta ventana."
+            ]
+
+            y = 250  # Posición inicial en Y.
+            for mensaje in mensajes:
+                dibujar_texto(mensaje, 20, y)
+                y -= 40  # Espaciado entre líneas.
+
+            glFlush()
+
+        # Inicializar y mostrar la ventana.
+        inicializar_ventana()
 
 if __name__ == "__main__":
     modo = input("Ingrese el modo ('vendedor' o 'cliente'): ").strip()
