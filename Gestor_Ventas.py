@@ -6,7 +6,7 @@ from Mapa import Mapa
 class GestorVentas:
     def __init__(self, modo):
         self.modo = modo  # 'vendedor' o 'cliente'.
-        self.width = 1200
+        self.width = 900
         self.height = 600
         self.mapa = Mapa(self.width, self.height)
         self.puntos = []  # Lista de puntos en el mapa.
