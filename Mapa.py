@@ -40,7 +40,7 @@ class Mapa:
 
     def inicializar_opengl(self):
         """Inicializa las configuraciones de OpenGL."""
-        glClearColor(1.0, 1.0, 1.0, 1.0)  # Fondo blanco.
+        glClearColor(0.75, 1.0, 0.5, 1.0)  # Fondo verde claro.
         glViewport(0, 0, self.width, self.height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()

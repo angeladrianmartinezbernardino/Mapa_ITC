@@ -279,16 +279,16 @@ class GestorVentas:
         - `distancia_total`: Distancia total recorrida en píxeles.
         """
         tiempo_total = distancia_total * 0.1  # Tiempo en segundos.
-        tarifa = distancia_total * 5  # Tarifa en pesos mexicanos.
+        tarifa = distancia_total * 0.5  # Tarifa en pesos mexicanos.
 
         def inicializar_ventana():
             # Inicializa la ventana de OpenGL.
             glutInit()
             glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
-            glutInitWindowSize(400, 300)
+            glutInitWindowSize(600, 300)
             glutInitWindowPosition(100, 100)
             glutCreateWindow(b"Resultado de la Entrega")
-            glClearColor(1.0, 1.0, 1.0, 1.0)  # Fondo blanco.
+            glClearColor(1.0, 1.0, 0.0, 1.0)  # Fondo amarillo.
             gluOrtho2D(0, 400, 0, 300)  # Coordenadas 2D.
             glutDisplayFunc(renderizar_resultado)
             glutMainLoop()
@@ -308,7 +308,7 @@ class GestorVentas:
                 f"Distancia total recorrida: {distancia_total:.2f} pixeles",
                 f"Tiempo total recorrido: {tiempo_total:.2f} segundos",
                 f"Tarifa de entrega: ${tarifa:.2f} pesos",
-                "Nota: Cada 1 pixel = 0.1 segundos y 5 pesos.",
+                "Nota: Cada 1 pixel = 0.1 segundos y 0.5 pesos mexicanos.",
                 "Presiona la X para cerrar esta ventana."
             ]
 

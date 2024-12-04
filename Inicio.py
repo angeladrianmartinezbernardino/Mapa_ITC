@@ -28,7 +28,7 @@ class Inicio:
 
     def inicializar_opengl(self):
         # Configuraciones de OpenGL.
-        glClearColor(1.0, 1.0, 1.0, 1.0)  # Fondo blanco.
+        glClearColor(0.0, 0.0, 0.0, 1.0)  # Fondo negro.
         glViewport(0, 0, self.width, self.height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
