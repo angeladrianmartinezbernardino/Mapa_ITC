@@ -108,3 +108,18 @@ class Mapa:
 
         print("No se encontró un camino.")
         return []
+
+    def resaltar_calle(self, origen, destino):
+        """Resalta una calle entre dos nodos."""
+        for calle in Calles.values():
+            if (calle['origen'] == origen and calle['destino'] == destino) or \
+                    (calle['destino'] == origen and calle['origen'] == destino):
+                glColor3f(1, 0, 0)  # Color rojo para resaltar.
+                glLineWidth(4.0)  # Línea más gruesa.
+                glBegin(GL_LINES)
+                glVertex2f(*calle['origen'])
+                glVertex2f(*calle['destino'])
+                glEnd()
+                glFlush()
+                return
+        print("Calle no encontrada para resaltar.")
